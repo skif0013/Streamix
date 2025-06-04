@@ -1,0 +1,64 @@
+# JetBrains Rider
+.idea/
+*.sln.iml
+*.DotSettings.user
+*.csproj.user
+*.suo
+*.cache
+*.ide
+*.resharper
+RiderGenerated/
+
+# ASP.NET Core и .NET
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+*.cache
+*.csproj.user
+*.pdb
+*.exe
+*.dll
+appsettings.*.json
+wwwroot/build/
+wwwroot/dist/
+*.nupkg
+packages/
+TestResults/
+[Pp]ublish/
+[Dd]ebug/
+[Rr]elease/
+[Bb]uild/
+
+# Логи и временные файлы
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# Локальные настройки окружения
+.env
+.env.local
+.env.*.local
+appsettings.Development.json
+appsettings.Local.json
+
+# Документация и другие файлы
+[Dd]ocs/
+*.md
+*.txt
+*.docx
+*.pdf
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Тесты и покрытие
+[Tt]est[Rr]esult*/
+[Cc]overage/
