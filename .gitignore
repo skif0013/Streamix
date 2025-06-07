@@ -1,64 +1,85 @@
-# JetBrains Rider
+# ОС Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Файлы подкачки
+pagefile.sys
+swapfile.sys
+hiberfil.sys
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider
 .idea/
 *.sln.iml
-*.DotSettings.user
-*.csproj.user
-*.suo
-*.cache
-*.ide
-*.resharper
-RiderGenerated/
 
-# ASP.NET Core и .NET
+# Rider и JetBrains IDE настройки
+*.iws
+*.ipr
+*.iml
+
+# Bin/obj
 bin/
 obj/
-*.user
-*.suo
-*.userprefs
-*.cache
-*.csproj.user
-*.pdb
-*.exe
-*.dll
-appsettings.*.json
-wwwroot/build/
-wwwroot/dist/
+
+# Логи
+*.log
+
+# Файлы конфигурации, секреты
+client_secret.json
+token.json
+*.json
+
+# Исключить все json файлы в любых папках
+**/*.json
+
+# Если нужно оставить конкретный json — добавь исключение ниже, например:
+#!important_config.json
+
+# Файлы NuGet
 *.nupkg
 packages/
-TestResults/
-[Pp]ublish/
-[Dd]ebug/
-[Rr]elease/
-[Bb]uild/
 
-# Логи и временные файлы
-*.log
-*.tmp
-*.temp
+# User-specific files
+*.user
+*.rsuser
+*.suo
+*.userprefs
+
+# Rider caches
+.idea/
+*.idea/
+.idea/*
+
+# DotCover
+*.dotCover
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Others
+*.cache
 *.bak
 *.swp
+*.tmp
 
-# Локальные настройки окружения
-.env
-.env.local
-.env.*.local
-appsettings.Development.json
-appsettings.Local.json
+# JetBrains Rider system folders
+.idea/
+.idea/*
 
-# Документация и другие файлы
-[Dd]ocs/
-*.md
-*.txt
-*.docx
-*.pdf
-
-# macOS
-.DS_Store
-
-# Windows
+# Windows image file caches
 Thumbs.db
-desktop.ini
+ehthumbs.db
 
-# Тесты и покрытие
-[Tt]est[Rr]esult*/
-[Cc]overage/
+# Visual Studio Code
+.vscode/
+
