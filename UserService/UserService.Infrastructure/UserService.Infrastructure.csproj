@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="Properties\launchSettings.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Data\InitialData\" />
+      <Folder Include="Data\Migrations\" />
+      <Folder Include="Interfaces\Repositories\" />
+      <Folder Include="Interfaces\Services\" />
+      <Folder Include="Repositories\" />
+      <Folder Include="Services\" />
+    </ItemGroup>
+
+</Project>
