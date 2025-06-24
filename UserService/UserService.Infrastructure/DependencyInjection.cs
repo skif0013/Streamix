@@ -1,3 +1,5 @@
+using Microsoft.Extensions.DependencyInjection;
+
 namespace UserService.Infrastructure
 {
     public static class DependencyInjection
