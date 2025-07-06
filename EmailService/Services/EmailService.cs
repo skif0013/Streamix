@@ -1,67 +1,74 @@
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Gmail.v1;
-using Google.Apis.Gmail.v1.Data;
-using Google.Apis.Services;
-using Google.Apis.Util.Store;
-using System.Net.Mail;
-using System.IO;
-using System.Text;
-using System.Threading;
 using EmailService.Inrerfaces;
+using EmailService.Model;
+using System.Net;
+using System.Net.Mail;
+using System.Text;
+
 
 namespace EmailService.Services;
 
 public class EmailService : IEmailService
 {
-    private readonly GmailService _gmailService;
+    private readonly ILogger<EmailService> _logger;
+    
+    private readonly IConfiguration _configuration;
+    
 
-    public EmailService()
+    public EmailService(ILogger<EmailService> logger, IConfiguration configuration)
     {
-        _gmailService = InitializeEmailService();
+        _configuration = configuration;
+        _logger = logger;
     }
 
-    private GmailService InitializeEmailService()
+    public Task SendEmailAsync(EmailRequest request)
     {
-        using var stream = new FileStream("client_secret.json", FileMode.Open, FileAccess.Read); 
-        
-        string credPath = "token.json";
-        
-        var credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-            GoogleClientSecrets.FromStream(stream).Secrets,
-            new[] { GmailService.Scope.GmailSend },
-            "user",
-            CancellationToken.None,
-            new FileDataStore(credPath, true)).Result;
-
-        return new GmailService(new BaseClientService.Initializer()
+        try
         {
-            HttpClientInitializer = credential,
-            ApplicationName = "Gmail API Sender"
-        });
-    }
+            _logger.LogInformation("Preparing SMTP client");
 
-    public async Task SendEmailAsync(string email, string subject, string message)
-    {
-        var mimeMessage = new StringBuilder();
-        mimeMessage.AppendLine("From: danik.medvedev99@gmail.com");
-        mimeMessage.AppendLine($"To: {email}");
-        mimeMessage.AppendLine($"Subject: {subject}");
-        mimeMessage.AppendLine("Content-Type: text/plain; charset=utf-8");
-        mimeMessage.AppendLine();
-        mimeMessage.AppendLine(message);
+           
+            var email = _configuration["SmtpSettings:Email"];
+            var password = _configuration["SmtpSettings:EmailPassword"];
 
-        var bytes = Encoding.UTF8.GetBytes(mimeMessage.ToString());
-        var base64Url = Convert.ToBase64String(bytes)
-            .Replace('+', '-')
-            .Replace('/', '_')
-            .Replace("=", "");
+            using var client = new SmtpClient("smtp.gmail.com", 587)
+            {
+                EnableSsl = true,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(email, password),
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Timeout = 30000
+            };
 
-        var gmailMessage = new Google.Apis.Gmail.v1.Data.Message
+           
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(email), 
+                Subject = request.Subject,
+                IsBodyHtml = true
+            };
+
+            mailMessage.To.Add(request.To);
+
+            var bodyBuilder = new StringBuilder();
+            bodyBuilder.AppendLine(request.Body);
+            bodyBuilder.AppendLine();
+            bodyBuilder.AppendLine(request.AdditionalText);
+
+            mailMessage.Body = bodyBuilder.ToString();
+
+            _logger.LogInformation("Sending email to {To}", request.To);
+            client.Send(mailMessage);
+            _logger.LogInformation("Email sent successfully to {To}", request.To);
+        }
+        catch (SmtpException smtpEx)
         {
-            Raw = base64Url
-        };
+            _logger.LogError(smtpEx, "SMTP error while sending email to {To}", request.To);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "General error while sending email to {To}", request.To);
+        }
 
-        await _gmailService.Users.Messages.Send(gmailMessage, "me").ExecuteAsync();
+        return Task.CompletedTask;
     }
-
 }

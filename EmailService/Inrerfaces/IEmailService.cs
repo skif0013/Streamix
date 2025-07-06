@@ -1,6 +1,8 @@
+using EmailService.Model;
+
 namespace EmailService.Inrerfaces;
 
 public interface IEmailService
-{ 
-    Task SendEmailAsync(string email, string subject, string message);
+{
+    Task SendEmailAsync(EmailRequest request);
 }

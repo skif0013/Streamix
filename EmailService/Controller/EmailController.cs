@@ -1,9 +1,11 @@
 using EmailService.Inrerfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
+using EmailService.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmailService.Controller;
 
+[ApiController]
+[Route("api/[controller]")]
 public class EmailController : ControllerBase
 {
     private readonly IEmailService _emailService;
@@ -14,10 +16,9 @@ public class EmailController : ControllerBase
     }
 
     [HttpPost("send")]
-    public async Task<IActionResult> SendEmail([FromQuery] string email)
+    public async Task<IActionResult> SendEmail([FromBody] EmailRequest request)
     {
-        await _emailService.SendEmailAsync(email, "Test","I love u Yana \n from Daniel");
-        
+        await _emailService.SendEmailAsync(request);
         return Ok("Email sent");
     }
 }
