@@ -83,3 +83,8 @@ ehthumbs.db
 # Visual Studio Code
 .vscode/
 
+# Игнорировать IDE-файлы JetBrains Rider / IntelliJ
+.idea/
+.idea.EmailService/
+
+

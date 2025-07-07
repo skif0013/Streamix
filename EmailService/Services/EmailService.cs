@@ -27,7 +27,7 @@ public class EmailService : IEmailService
             _logger.LogInformation("Preparing SMTP client");
 
            
-            var email = _configuration["SmtpSettings:Email"];
+            var email = _configuration["SmtpSettings:SenderEmail"];
             var password = _configuration["SmtpSettings:EmailPassword"];
 
             using var client = new SmtpClient("smtp.gmail.com", 587)
@@ -39,10 +39,11 @@ public class EmailService : IEmailService
                 Timeout = 30000
             };
 
-           
+           var senderEmail = _configuration["SmtpSettings:SenderEmail"];
+            
             var mailMessage = new MailMessage
             {
-                From = new MailAddress(email), 
+                From = new MailAddress(senderEmail), 
                 Subject = request.Subject,
                 IsBodyHtml = true
             };

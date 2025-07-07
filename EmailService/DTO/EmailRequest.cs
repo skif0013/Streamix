@@ -8,7 +8,5 @@ public class EmailRequest
     
     public string Body { get; set; } = default!;
     
-    public string From { get; set; } = default!;
-    
     public string AdditionalText { get; set; } = default!;
 }
