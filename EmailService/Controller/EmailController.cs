@@ -21,4 +21,11 @@ public class EmailController : ControllerBase
         await _emailService.SendEmailAsync(request);
         return Ok("Email sent");
     }
+
+    [HttpPost("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail([FromBody] EmailVerification verify)
+    {
+        await _emailService.SendVereficationCodeAsync(verify);
+        return Ok("Email verification sent");
+    }
 }

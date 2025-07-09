@@ -1,6 +1,5 @@
 using EmailService.Inrerfaces;
 using EmailService.Model;
-using System.Net;
 using System.Net.Mail;
 using System.Text;
 
@@ -9,67 +8,65 @@ namespace EmailService.Services;
 
 public class EmailService : IEmailService
 {
-    private readonly ILogger<EmailService> _logger;
-    
+    private readonly ISmtpClientFactory _smtpClientFactory;
     private readonly IConfiguration _configuration;
     
 
-    public EmailService(ILogger<EmailService> logger, IConfiguration configuration)
+    public EmailService(ILogger<EmailService> logger, IConfiguration configuration, ISmtpClientFactory smtpClientFactory)
     {
+        _smtpClientFactory = smtpClientFactory;
         _configuration = configuration;
-        _logger = logger;
     }
-
+    
     public Task SendEmailAsync(EmailRequest request)
     {
-        try
+        var client = _smtpClientFactory.CreateClient();
+        
+        var senderEmail = _configuration["SmtpSettings:SenderEmail"];
+        
+        var mailMessage = new MailMessage
         {
-            _logger.LogInformation("Preparing SMTP client");
+            From = new MailAddress(senderEmail, senderEmail),
+            Subject = request.Subject,
+            Body = request.Body,
+            IsBodyHtml = true
+        };
+        
+        mailMessage.To.Add(request.To);
+        
+        var bodyBuilder = new StringBuilder()
+            .AppendLine(request.Body)
+            .AppendLine()
+            .AppendLine(request.AdditionalText);
 
-           
-            var email = _configuration["SmtpSettings:SenderEmail"];
-            var password = _configuration["SmtpSettings:EmailPassword"];
+        mailMessage.Body = bodyBuilder.ToString();
+        client.Send(mailMessage);
 
-            using var client = new SmtpClient("smtp.gmail.com", 587)
-            {
-                EnableSsl = true,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(email, password),
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                Timeout = 30000
-            };
 
-           var senderEmail = _configuration["SmtpSettings:SenderEmail"];
-            
-            var mailMessage = new MailMessage
-            {
-                From = new MailAddress(senderEmail), 
-                Subject = request.Subject,
-                IsBodyHtml = true
-            };
+        return Task.CompletedTask;
+    }
 
-            mailMessage.To.Add(request.To);
-
-            var bodyBuilder = new StringBuilder();
-            bodyBuilder.AppendLine(request.Body);
-            bodyBuilder.AppendLine();
-            bodyBuilder.AppendLine(request.AdditionalText);
-
-            mailMessage.Body = bodyBuilder.ToString();
-
-            _logger.LogInformation("Sending email to {To}", request.To);
-            client.Send(mailMessage);
-            _logger.LogInformation("Email sent successfully to {To}", request.To);
-        }
-        catch (SmtpException smtpEx)
+    public Task SendVereficationCodeAsync(EmailVerification verification)
+    {
+        var client = _smtpClientFactory.CreateClient();
+        
+        var senderEmail = _configuration["SmtpSettings:SenderEmail"];
+        
+        var subject = _configuration["EmailVerification:RegisterVerification:Subject"];
+        var bodyTemplate = _configuration["EmailVerification:RegisterVerification:Body"];
+        
+        var mailMessage = new MailMessage
         {
-            _logger.LogError(smtpEx, "SMTP error while sending email to {To}", request.To);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "General error while sending email to {To}", request.To);
-        }
-
+            From = new MailAddress(senderEmail, senderEmail),
+            Subject = subject,
+            Body = bodyTemplate,
+            IsBodyHtml = true
+        };
+        
+        mailMessage.To.Add(verification.To);
+        
+        client.Send(mailMessage);
+        
         return Task.CompletedTask;
     }
 }

@@ -1,4 +1,5 @@
 using EmailService.Inrerfaces;
+using EmailService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<IEmailService, EmailService.Services.EmailService>();
+builder.Services.AddScoped<ISmtpClientFactory, SmtpClientFactory>();
+
 builder.Services.AddOpenApi();
 
 builder.Services.AddSwaggerGen(c =>
