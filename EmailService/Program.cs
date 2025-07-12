@@ -30,16 +30,15 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+
+app.MapOpenApi();
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseMiddleware<EmailService.Middleware.ErrorHandlingMiddleware>();
 
-app.UseHttpsRedirection();
+ // app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
