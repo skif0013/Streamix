@@ -6,10 +6,10 @@ services:
       dockerfile: UserService.WebApi/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "ConnectionStrings__DefaultConnection=Host=localhost;Database=UserDB;Username=root;Password=&Nx5$:p74K@"
+      - "ConnectionStrings__DefaultConnection=Host=postgres;Database=UserDB;Username=root;Password=&Nx5$:p74K@"
     ports:
-      - "5003:8080"
-      - "5002:8081"
+      - "5001:8080"
+      - "5002:8001"
     depends_on:
       - postgres
     restart: always

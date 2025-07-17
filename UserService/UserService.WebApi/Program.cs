@@ -1,10 +1,15 @@
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using UserService.Infrastructure.Data;
 using UserService.Infrastructure.Identity;
-
+using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
+using Microsoft.IdentityModel.Tokens;
+using UserService.Infrastructure.Interfaces.Services;
+using UserService.Infrastructure.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,34 +18,53 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-        .LogTo(Console.WriteLine, 
-            new[] { DbLoggerCategory.Database.Connection.Name },
-            LogLevel.Information)
-        .EnableSensitiveDataLogging()
-);
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-Console.WriteLine($"DEBUG: Connection String = {connectionString}");
+builder.Services.AddScoped<TokenService, TokenService>();
 
-// Добавляем Identity
 builder.Services.AddIdentity<UserIdentity, RoleIdentity>(options =>
     {
-        options.Password.RequireDigit = true;
+        options.Password.RequireDigit = false;
         options.Password.RequireLowercase = true;
         options.Password.RequireUppercase = true;
         options.Password.RequireNonAlphanumeric = true;
-        options.Password.RequiredLength = 8;
+        options.Password.RequiredLength = 6;
+        options.User.RequireUniqueEmail = true;
     })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// Добавляем аутентификацию
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-});
+builder.Services.AddTransient<IUserService, UserService.Infrastructure.Services.UserService>();
+builder.Services.AddTransient<ITokenService, TokenService>();
+
+#region config jwt
+var validIssuer = builder.Configuration.GetValue<string>("JwtTokenSettings:ValidIssuer");
+var validAudience = builder.Configuration.GetValue<string>("JwtTokenSettings:ValidAudience");
+var symmetricSecurityKey = builder.Configuration.GetValue<string>("JwtTokenSettings:SymmetricSecurityKey");
+
+builder.Services.AddAuthentication(options => {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.IncludeErrorDetails = true;
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ClockSkew = TimeSpan.Zero,
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = validIssuer,
+            ValidAudience = validAudience,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(symmetricSecurityKey)
+            ),
+        };
+    });
+#endregion
 
 builder.Services.AddSwaggerGen(option =>
 {
@@ -71,7 +95,9 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 builder.Services.AddAuthorization();
+
 var app = builder.Build();
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -80,16 +106,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseRouting(); // добавьте эту строку
+app.UseRouting();
 
-app.UseAuthentication(); // добавьте эту строку
+app.UseAuthentication(); 
 app.UseAuthorization();
 
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Test API V1");
-    c.RoutePrefix = string.Empty; // чтобы Swagger UI был доступен на корневом URL
-});
 
 app.MapControllers();
 

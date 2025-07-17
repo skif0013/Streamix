@@ -1,8 +1,16 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using sugar.Core.Abstractions;
+
 namespace UserService.Core.Models
 {
-    public class UserInfo
+    public class UserInfo : Entity<Guid>
     {
-        public Guid Id { get; set; }
-        public string nick { get; set; }
+        public Guid UserId { get; set; }
+        public string? ProfileImmageUrl { get; set; }
+        public string Description { get; set; }
+        public Dictionary<string, string> SocialLinkUrl { get; set; }
+
+        [NotMapped]
+        public IUser User { get; set; }
     }
 }

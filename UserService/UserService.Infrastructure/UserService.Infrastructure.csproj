@@ -15,9 +15,7 @@
         <Folder Include="Data\InitialData\" />
         <Folder Include="Data\Migrations\" />
         <Folder Include="Interfaces\Repositories\" />
-        <Folder Include="Interfaces\Services\" />
         <Folder Include="Repositories\" />
-        <Folder Include="Services\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,7 +23,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
           <PrivateAssets>all</PrivateAssets>
@@ -35,7 +35,9 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.7" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.8" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
     </ItemGroup>
 
 </Project>
