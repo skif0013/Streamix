@@ -37,5 +37,12 @@ namespace UserService.WebApi.Controllers
             var result = await _userService.ResetPasswordAsync(request, token);
             return result;
         }
+
+        [HttpPost("ConfirmEmail")]
+        public async Task<Result<string>> ConfimEmailAsync(string email, [FromHeader] string token)
+        {
+            var result = await _userService.ConfirmEmailAsync(email, token);
+            return result;
+        }
     }
 }

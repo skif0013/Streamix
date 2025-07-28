@@ -2,7 +2,7 @@ using UserService.Core.Models;
 
 namespace UserService.Infrastructure.Data;
 
-public class ApplicationDbContext : IdentityDbContext<UserIdentity, RoleIdentity, Guid>
+public class ApplicationDbContext : IdentityDbContext<UserIdentity, IdentityRole<Guid>, Guid>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -14,6 +14,12 @@ public class ApplicationDbContext : IdentityDbContext<UserIdentity, RoleIdentity
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        
+        builder.Entity<IdentityUserRole<Guid>>(ur =>
+        {
+            ur.HasKey(r => new { r.UserId, r.RoleId });
+            ur.HasOne<RoleIdentity>().WithMany(r => r.UserRoles).HasForeignKey(ur => ur.RoleId);
+        });
         
         builder.Entity<UserInfo>()
             .HasQueryFilter(u => u.DeletedAt == null)

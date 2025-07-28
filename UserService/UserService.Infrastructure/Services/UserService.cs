@@ -1,9 +1,6 @@
-using Microsoft.AspNetCore.Http;
 using UserService.Application.Interfaces.Services;
 using UserService.Application.DTO;
 using UserService.Core.Results;
-using UserService.Infrastructure.Identity;
-using Microsoft.AspNetCore.Identity;
 using UserService.Infrastructure.Interfaces.Services;
 
 namespace UserService.Infrastructure.Services;
@@ -11,17 +8,18 @@ namespace UserService.Infrastructure.Services;
 public class UserService : IUserService
 {
     private readonly UserManager<UserIdentity> _userManager;
-    //private readonly SignInManager<UserIdentity> _signInManager;
+    private readonly RoleManager<RoleIdentity> _roleManager;
     private readonly ITokenService _tokenService;
+    
 
     public UserService(
         UserManager<UserIdentity> userManager,
-        //SignInManager<UserIdentity> signInManager
+        RoleManager<RoleIdentity> roleManager,
         ITokenService tokenService
     )
     {
         _userManager = userManager;
-        //_signInManager = signInManager;
+        _roleManager = roleManager;
         _tokenService = tokenService;
     }
     
@@ -39,10 +37,11 @@ public class UserService : IUserService
             var errors = string.Join(", ", result.Errors.Select(e => e.Description));
             return Result<string>.Failure($"Error creating user: {errors}");
         }
-
+        
+        Console.WriteLine($"token {await _userManager.GenerateEmailConfirmationTokenAsync(user)}");
         return Result<string>.Success("user created successfully");
     }
-
+    
     public async Task<Result<AuthResponse>> AuthenticateAsync(AuthRequest request)
     {
         var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Email == request.Email);
@@ -80,9 +79,10 @@ public class UserService : IUserService
         {
             return Result<string>.Failure($"{request.Email} - this email address is not registered");
         }
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
         
-        // push token to RebbitMQ
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        Console.WriteLine(token);
+        // push token to RabbitMQ
         
         return Result<string>.Success("Password reset successfully");
     }
@@ -92,7 +92,7 @@ public class UserService : IUserService
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
         {
-            return Result<string>.Failure($"{request.Email} - this email address is not registered.");
+            return Result<string>.Failure($"{request.Email} - this email address is not registered");
         }
         
         var resetPassResult = await _userManager.ResetPasswordAsync(user, token, request.NewPassword!);
@@ -105,5 +105,24 @@ public class UserService : IUserService
         
         return Result<string>.Success("Password reset successfully");
     }
-}
 
+    public async Task<Result<string>> ConfirmEmailAsync(string email, string token)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return Result<string>.Failure("Invalid email address");
+        }
+        await _userManager.ConfirmEmailAsync(user, token);
+        
+        var roleExists = _roleManager.FindByNameAsync("User".ToString());
+        if (!roleExists.IsCompletedSuccessfully)
+        {
+            Console.WriteLine("Role doesn't exist");
+        }
+
+        await _userManager.AddToRoleAsync(user, roleExists.Result.Name.ToString());
+        
+        return Result<string>.Success("Email confirmed");
+    }
+}

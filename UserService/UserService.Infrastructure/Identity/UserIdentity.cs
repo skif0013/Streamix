@@ -9,6 +9,6 @@ namespace UserService.Infrastructure.Identity
         
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? LastModified { get; set; }
-        public DateTime? DeletedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }    
     }
 }

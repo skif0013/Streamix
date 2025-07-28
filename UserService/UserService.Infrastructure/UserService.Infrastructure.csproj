@@ -12,7 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Data\InitialData\" />
         <Folder Include="Data\Migrations\" />
         <Folder Include="Interfaces\Repositories\" />
         <Folder Include="Repositories\" />

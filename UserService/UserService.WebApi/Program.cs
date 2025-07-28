@@ -8,6 +8,7 @@ using UserService.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.IdentityModel.Tokens;
+using UserService.Infrastructure.Data.InitialData;
 using UserService.Infrastructure.Interfaces.Services;
 using UserService.Infrastructure.Services;
 
@@ -31,6 +32,7 @@ builder.Services.AddIdentity<UserIdentity, RoleIdentity>(options =>
         options.Password.RequiredLength = 6;
         options.User.RequireUniqueEmail = true;
     })
+    .AddRoles<RoleIdentity>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
@@ -94,16 +96,28 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("CreatorPolicy", policy => policy.RequireRole("Creator", "Admin"));
+    options.AddPolicy("UserPolicy", policy => policy.RequireRole("User", "Creator", "Admin"));
+});
 
 var app = builder.Build();
-
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var roleManager = services.GetRequiredService<RoleManager<RoleIdentity>>();
+    
+    await RoleInitData.InitializeAsync(roleManager);
+}
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 app.UseRouting();
