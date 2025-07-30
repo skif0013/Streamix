@@ -2,6 +2,8 @@ using EmailService.Inrerfaces;
 using EmailService.Model;
 using System.Net.Mail;
 using System.Text;
+using Microsoft.Extensions.Options;
+using Sprache;
 
 
 namespace EmailService.Services;
@@ -10,10 +12,11 @@ public class EmailService : IEmailService
 {
     private readonly ISmtpClientFactory _smtpClientFactory;
     private readonly IConfiguration _configuration;
-    
+    private readonly EmailSettings _settings;
 
-    public EmailService(ILogger<EmailService> logger, IConfiguration configuration, ISmtpClientFactory smtpClientFactory)
+    public EmailService(IConfiguration configuration, ISmtpClientFactory smtpClientFactory,IOptions<EmailSettings> emailSettings)
     {
+        _settings = emailSettings.Value;
         _smtpClientFactory = smtpClientFactory;
         _configuration = configuration;
     }
@@ -21,24 +24,23 @@ public class EmailService : IEmailService
     public Task SendEmailAsync(EmailRequest request)
     {
         var client = _smtpClientFactory.CreateClient();
-        
-        var senderEmail = _configuration["SmtpSettings:SenderEmail"];
-        
+
+        var senderEmail = Environment.GetEnvironmentVariable("SENDER_EMAIL");
+            
         var mailMessage = new MailMessage
         {
             From = new MailAddress(senderEmail, senderEmail),
             Subject = request.Subject,
             Body = request.Body,
-            IsBodyHtml = true
+            IsBodyHtml = true,
         };
         
         mailMessage.To.Add(request.To);
-        
+
         var bodyBuilder = new StringBuilder()
             .AppendLine(request.Body)
-            .AppendLine()
-            .AppendLine(request.AdditionalText);
-
+            .AppendLine();
+        
         mailMessage.Body = bodyBuilder.ToString();
         client.Send(mailMessage);
 
@@ -46,27 +48,22 @@ public class EmailService : IEmailService
         return Task.CompletedTask;
     }
 
-    public Task SendVereficationCodeAsync(EmailVerification verification)
+    public async Task SendVerificationCodeAsync(EmailVerification verification)
     {
-        var client = _smtpClientFactory.CreateClient();
-        
-        var senderEmail = _configuration["SmtpSettings:SenderEmail"];
-        
         var subject = _configuration["EmailVerification:RegisterVerification:Subject"];
-        var bodyTemplate = _configuration["EmailVerification:RegisterVerification:Body"];
-        
-        var mailMessage = new MailMessage
+        var body = _configuration["EmailVerification:RegisterVerification:Body"]
+            .Replace("{code}", verification.Code);
+
+        using var mailMessage = new MailMessage
         {
-            From = new MailAddress(senderEmail, senderEmail),
+            From = new MailAddress(_settings.Username),
             Subject = subject,
-            Body = bodyTemplate,
-            IsBodyHtml = true
+            Body = body,
+            IsBodyHtml = true,
+            To = { verification.To }
         };
-        
-        mailMessage.To.Add(verification.To);
-        
-        client.Send(mailMessage);
-        
-        return Task.CompletedTask;
+
+        using var client = _smtpClientFactory.CreateClient();
+        await client.SendMailAsync(mailMessage);
     }
 }

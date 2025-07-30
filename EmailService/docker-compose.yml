@@ -2,14 +2,11 @@ version: '3.9'
 
 services:
   emailservice:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     container_name: emailservice
     ports:
       - "8080:8080"
+    env_file: .env  
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      SmtpSettings__SenderEmail: ${SENDER_EMAIL}
-      SmtpSettings__EmailPassword: ${EMAIL_PASSWORD}
     restart: unless-stopped

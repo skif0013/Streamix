@@ -16,16 +16,16 @@ public class EmailController : ControllerBase
     }
 
     [HttpPost("send")]
-    public async Task<IActionResult> SendEmail([FromBody] EmailRequest request)
+    public async Task<IActionResult> Send([FromBody] EmailRequest request)
     {
         await _emailService.SendEmailAsync(request);
         return Ok("Email sent");
     }
 
-    [HttpPost("confirm-email")]
-    public async Task<IActionResult> ConfirmEmail([FromBody] EmailVerification verify)
+    [HttpPost("verify")]
+    public async Task<IActionResult> SendVerification([FromBody] EmailVerification request)
     {
-        await _emailService.SendVereficationCodeAsync(verify);
-        return Ok("Email verification sent");
+        await _emailService.SendVerificationCodeAsync(request);
+        return Ok("Verification code sent");
     }
 }

@@ -1,32 +1,28 @@
 using System.Net;
 using System.Net.Mail;
+using DotNetEnv;
 using EmailService.Inrerfaces;
+using EmailService.Model;
+using Microsoft.Extensions.Options;
+using Sprache;
 
 namespace EmailService.Services;
 
-public class SmtpClientFactory : ISmtpClientFactory{
-    
-    private readonly IConfiguration _configuration;
+public class SmtpClientFactory : ISmtpClientFactory
+{
+    private readonly EmailSettings _settings;
 
-
-    public SmtpClientFactory(IConfiguration configuration)
+    public SmtpClientFactory(IOptions<EmailSettings> emailSettings)
     {
-        _configuration = configuration;
+        _settings = emailSettings.Value; 
     }
-
 
     public SmtpClient CreateClient()
     {
-        var email = _configuration["SmtpSettings:SenderEmail"];
-        var password = _configuration["SmtpSettings:EmailPassword"];
-
-        return new SmtpClient("smtp.gmail.com", 587)
+        return new SmtpClient(_settings.Host, _settings.Port)
         {
-            EnableSsl = true,
-            UseDefaultCredentials = false,
-            Credentials = new NetworkCredential(email, password),
-            DeliveryMethod = SmtpDeliveryMethod.Network,
-            Timeout = 30000
+            EnableSsl = _settings.EnableSsl,
+            Credentials = new NetworkCredential(_settings.Username, _settings.Password)
         };
     }
 }
