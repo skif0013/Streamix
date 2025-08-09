@@ -26,6 +26,6 @@ public class EmailController : ControllerBase
     public async Task<IActionResult> SendVerification([FromBody] EmailVerification request)
     {
         await _emailService.SendVerificationCodeAsync(request);
-        return Ok("Verification code sent");
+            return Ok("Verification code sent");
     }
 }

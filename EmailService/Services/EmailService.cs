@@ -50,13 +50,19 @@ public class EmailService : IEmailService
 
     public async Task SendVerificationCodeAsync(EmailVerification verification)
     {
-        var subject = _configuration["EmailVerification:RegisterVerification:Subject"];
-        var body = _configuration["EmailVerification:RegisterVerification:Body"]
-            .Replace("{code}", verification.Code);
-
+        var subject = _configuration?["EmailVerification:RegisterVerification:Subject"] 
+                      ?? "Код подтверждения";
+    
+        var bodyTemplate = _configuration?["EmailVerification:RegisterVerification:Body"] 
+                           ?? "Ваш код подтверждения: {code}";
+    
+        var body = bodyTemplate.Replace("{code}", verification.Code);
+        
+        var senderEmail = _settings?.Username ?? Environment.GetEnvironmentVariable("SENDER_EMAIL") 
+            ?? throw new InvalidOperationException("Не задан email отправителя");
         using var mailMessage = new MailMessage
         {
-            From = new MailAddress(_settings.Username),
+            From = new MailAddress(senderEmail),
             Subject = subject,
             Body = body,
             IsBodyHtml = true,

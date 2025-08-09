@@ -1,27 +1,26 @@
-using EmailService.Inrerfaces;
-using EmailService.Model;
+    using EmailService.Inrerfaces;
 
-namespace EmailService.Services;
+    namespace EmailService.Services;
 
-public class EmailTemplateProvider : IEmailTemplateProvider
-{
-    private readonly IConfiguration _config;
-
-    public EmailTemplateProvider(IConfiguration config)
+    public class EmailTemplateProvider : IEmailTemplateProvider
     {
-        _config = config;
-    }
+        private readonly IConfiguration _config;
 
-    public string GetVerificationBody(string code)
-    {
-        string template = _config["EmailTemplates:Verification:Body"];
-        return template?.Replace("{code}", code) 
-               ?? $"Ваш код подтверждения: {code}"; // fallback
-    }
+        public EmailTemplateProvider(IConfiguration config)
+        {
+            _config = config;
+        }
 
-    public string GetVerificationSubject()
-    {
-        return _config["EmailTemplates:Verification:Subject"] 
-               ?? "Подтверждение email"; // fallback
+        public string GetVerificationBody(string code)
+        {
+            string template = _config["EmailTemplates:Verification:Body"];
+            return template?.Replace("{code}", code) 
+                   ?? $"Ваш код подтверждения: {code}"; // fallback
+        }
+
+        public string GetVerificationSubject()
+        {
+            return _config["EmailTemplates:Verification:Subject"] 
+                   ?? "Подтверждение email"; // fallback
+        }
     }
-}
