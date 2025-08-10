@@ -1,64 +1,78 @@
-# JetBrains Rider
-.idea/
-*.sln.iml
-*.DotSettings.user
-*.csproj.user
-*.suo
-*.cache
-*.ide
-*.resharper
-RiderGenerated/
+# Операционная система
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+pagefile.sys
+swapfile.sys
+hiberfil.sys
 
-# ASP.NET Core и .NET
+# IDE: Rider / JetBrains / Visual Studio
+.vs/
+.idea/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.sln.iml
+*.iws
+*.ipr
+*.iml
+
+# Build
 bin/
 obj/
-*.user
-*.suo
-*.userprefs
-*.cache
-*.csproj.user
-*.pdb
-*.exe
 *.dll
-appsettings.*.json
-wwwroot/build/
-wwwroot/dist/
-*.nupkg
-packages/
-TestResults/
-[Pp]ublish/
-[Dd]ebug/
-[Rr]elease/
-[Bb]uild/
+*.exe
+*.pdb
 
-# Логи и временные файлы
+# Logs, temp
 *.log
 *.tmp
-*.temp
 *.bak
 *.swp
+*.cache
 
-# Локальные настройки окружения
+# NuGet
+*.nupkg
+packages/
+
+# User-specific / local settings
+*.user
+*.rsuser
+*.userprefs
+*.DotSettings.user
+
+# DotCover, ReSharper
+*.dotCover
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# VS Code
+.vscode/
+
+# Rider system folders
+.idea.EmailService/
+
+# Секреты и конфигурация
 .env
-.env.local
-.env.*.local
-appsettings.Development.json
-appsettings.Local.json
+*.secrets.json
+**/secrets.json
 
-# Документация и другие файлы
-[Dd]ocs/
-*.md
-*.txt
-*.docx
-*.pdf
+# UserSecrets (.NET)
+**/UserSecrets/
+**/userSecrets/
+**/usersecrets/
+**/.microsoft/usersecrets/
+**/.microsoft/UserSecrets/
+%APPDATA%/Microsoft/UserSecrets/   
 
-# macOS
-.DS_Store
+# JSON-файлы, кроме whitelisted
+**/*.json
+!appsettings.json
+!appsettings.Development.json
 
-# Windows
-Thumbs.db
-desktop.ini
-
-# Тесты и покрытие
-[Tt]est[Rr]esult*/
-[Cc]overage/
+# Swagger docs (если сгенерируются)
+swagger.json
+swagger/*.json
