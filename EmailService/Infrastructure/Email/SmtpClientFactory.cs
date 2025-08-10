@@ -1,10 +1,8 @@
 using System.Net;
 using System.Net.Mail;
-using DotNetEnv;
 using EmailService.Inrerfaces;
 using EmailService.Model;
 using Microsoft.Extensions.Options;
-using Sprache;
 
 namespace EmailService.Services;
 

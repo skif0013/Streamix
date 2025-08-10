@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace EmailService.Model;
 
 public class EmailSettings

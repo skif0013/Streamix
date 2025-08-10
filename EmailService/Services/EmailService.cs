@@ -3,7 +3,7 @@ using EmailService.Model;
 using System.Net.Mail;
 using System.Text;
 using Microsoft.Extensions.Options;
-using Sprache;
+
 
 
 namespace EmailService.Services;
@@ -21,13 +21,13 @@ public class EmailService : IEmailService
         _configuration = configuration;
     }
     
-    public Task SendEmailAsync(EmailRequest request)
+    public async Task SendEmailAsync(EmailRequest request)
     {
-        var client = _smtpClientFactory.CreateClient();
+      using  var client = _smtpClientFactory.CreateClient();
 
-        var senderEmail = Environment.GetEnvironmentVariable("SENDER_EMAIL");
+      var senderEmail = Environment.GetEnvironmentVariable("SENDER_EMAIL");
             
-        var mailMessage = new MailMessage
+      using var mailMessage = new MailMessage
         {
             From = new MailAddress(senderEmail, senderEmail),
             Subject = request.Subject,
@@ -42,15 +42,12 @@ public class EmailService : IEmailService
             .AppendLine();
         
         mailMessage.Body = bodyBuilder.ToString();
-        client.Send(mailMessage);
-
-
-        return Task.CompletedTask;
+        await client.SendMailAsync(mailMessage);
     }
 
     public async Task SendVerificationCodeAsync(EmailVerification verification)
     {
-        var subject = _configuration?["EmailVerification:RegisterVerification:Subject"] 
+        var subject =  _configuration?["EmailVerification:RegisterVerification:Subject"] 
                       ?? "Код подтверждения";
     
         var bodyTemplate = _configuration?["EmailVerification:RegisterVerification:Body"] 
