@@ -13,7 +13,6 @@ builder.WebHost.ConfigureKestrel(options =>
 });
 
 
-var endpoint = "play.min.io";
 var accessKey = "minioadmin";
 var secretKey = "minioadmin";
 // Add Minio using the default endpoint
@@ -69,6 +68,7 @@ var app = builder.Build();
 
 app.UseRouting();
 
+app.MapControllers();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.MapControllers();

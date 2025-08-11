@@ -40,6 +40,11 @@ namespace VideoService.Middlewares
 
                
             }
+            else if (exception is Minio.Exceptions.MinioException minioEx)
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                errorMessage = "Storage error: " + minioEx.Message;
+            }
             else
             {
                 statusCode = StatusCodes.Status400BadRequest;
