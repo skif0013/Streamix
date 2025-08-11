@@ -4,3 +4,5 @@
 //global using VideoService.Application.Models;
 //global using VideoService.Core.Models;
 global using VideoService.Core.Results;
+global using FluentValidation;
+global using VideoService.Application.DTO;

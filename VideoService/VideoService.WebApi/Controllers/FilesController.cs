@@ -30,9 +30,9 @@ public class FilesController : ControllerBase
 
     [HttpPost("UploadPhoto")]
     [Consumes("multipart/form-data")]
-    public async Task<Result<string>> UploadUserAvatars([FromForm]UploadUserAvatarRequest request)
+    public async Task<Result<string>> UploadUserAvatars([FromForm]UploadUserAvatarRequestDto requestDto)
     {
-        var result = await _minioService.UploadUserAvatars(request);
+        var result = await _minioService.UploadUserAvatar(requestDto);
         return result;
     }
     

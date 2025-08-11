@@ -49,19 +49,14 @@ public class MinioService : IMinioService
         return Result<string>.Success("bucket deleted successfully");
     }
     
-    public async Task<Result<string>> UploadUserAvatars(UploadUserAvatarRequest request)
+    public async Task<Result<string>> UploadUserAvatar(UploadUserAvatarRequestDto requestDto)
     {
-        if (request.File.Length == 0)
-        {
-            return Result<string>.Failure("File is empty");
-        }
-
-        var fileName = $"{Guid.NewGuid()}_{request.File.FileName}";
+        var fileName = $"{Guid.NewGuid()}_{requestDto.File.FileName}";
         var filePath = Path.Combine(Path.GetTempPath(), fileName);
 
         await using (var stream = new FileStream(filePath, FileMode.Create))
         {
-            await request.File.CopyToAsync(stream);
+            await requestDto.File.CopyToAsync(stream);
         }
 
         await _minioClient.PutObjectAsync(
@@ -69,7 +64,7 @@ public class MinioService : IMinioService
                 .WithBucket("user-photos")
                 .WithObject(fileName)
                 .WithFileName(filePath)
-                .WithContentType(request.File.ContentType)
+                .WithContentType(requestDto.File.ContentType)
         );
         
         var fileUrl = $"{_configuration["MinioSettings:PublicMinioURL"]}/user-photos/{fileName}";
@@ -87,7 +82,7 @@ public class MinioService : IMinioService
         {
             return Result<string>.Failure("Object does not exist");
         }
-
+        
         await _minioClient.RemoveObjectAsync(
             new RemoveObjectArgs().WithBucket(bucketName).WithObject(fileName));
         

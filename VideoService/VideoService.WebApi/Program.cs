@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -73,6 +74,7 @@ builder.Services
 
 builder.Services.AddScoped<IMinioService, MinioService>();
 
+builder.Services.AddFluentValidationAutoValidation();
 
 var app = builder.Build();
 app.UseMiddleware<CustomExceptionMiddleware>();
