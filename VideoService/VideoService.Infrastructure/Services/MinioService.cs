@@ -49,7 +49,7 @@ public class MinioService : IMinioService
         return Result<string>.Success("bucket deleted successfully");
     }
     
-    public async Task<Result<string>> UploadPhoto(UploadPhotoRequest request)
+    public async Task<Result<string>> UploadUserAvatars(UploadUserAvatarRequest request)
     {
         if (request.File.Length == 0)
         {
@@ -66,13 +66,13 @@ public class MinioService : IMinioService
 
         await _minioClient.PutObjectAsync(
             new PutObjectArgs()
-                .WithBucket(request.bucketName)
+                .WithBucket("user-photos")
                 .WithObject(fileName)
                 .WithFileName(filePath)
                 .WithContentType(request.File.ContentType)
         );
         
-        var fileUrl = $"{_configuration["Minio:PublicMinioURL"]}/{request.bucketName}/{fileName}";
+        var fileUrl = $"{_configuration["MinioSettings:PublicMinioURL"]}/user-photos/{fileName}";
         
         return Result<string>.Success(fileUrl);
     }

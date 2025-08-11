@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Minio;
 using VideoService.Application;
-using VideoService.Application.gRPC;
 using VideoService.Application.Interfaces.Services;
 using VideoService.Application.Services;
 using VideoService.Infrastructure.Data;
