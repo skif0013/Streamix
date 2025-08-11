@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  emailservice:
+    build: .
+    container_name: emailservice
+    ports:
+      - "8080:8080"
+    env_file: .env  
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+    restart: unless-stopped
