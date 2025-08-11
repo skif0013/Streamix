@@ -1,3 +1,4 @@
+using System.Net;
 using Minio;
 using Minio.DataModel.Args;
 using VideoService.Application.DTO;
@@ -88,4 +89,25 @@ public class MinioService : IMinioService
         
         return Result<string>.Success("Object deleted successfully");
     }
+
+    public async Task<Result<string>> UploadVideo(UploadUserVideo request)
+    {
+        var objectName = $"{Guid.NewGuid()}_{request.videoFile.FileName}";
+        
+        var filePath = Path.Combine(Path.GetTempPath(), objectName);
+        
+        await using var stream = request.videoFile.OpenReadStream();
+        
+        await _minioClient.PutObjectAsync(
+                new PutObjectArgs()
+                    .WithBucket("videobucket")
+                    .WithObject(objectName)
+                    .WithStreamData(stream)
+                    .WithObjectSize(request.videoFile.Length)
+                    .WithContentType(request.videoFile.ContentType)
+            );
+        
+        
+        return Result<string>.Success(filePath);
+    }   
 }

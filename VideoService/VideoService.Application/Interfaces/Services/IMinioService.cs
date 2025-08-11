@@ -8,4 +8,6 @@ public interface IMinioService
     Task<Result<string>> DeleteBucket(string bucketName);
     Task<Result<string>> UploadUserAvatar(UploadUserAvatarRequestDto requestDto);
     Task<Result<string>> DeleteObj(string bucketName, string fileName);
+    
+    Task<Result<string>> UploadVideo(UploadUserVideo request);
 }
