@@ -1,8 +1,13 @@
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Minio;
 using VideoService.Application;
+using VideoService.Application.gRPC;
+using VideoService.Application.Interfaces.Services;
+using VideoService.Application.Services;
 using VideoService.Infrastructure.Data;
+using VideoService.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,15 +18,17 @@ builder.WebHost.ConfigureKestrel(options =>
 });
 
 
+var endpoint = "minio:9000"; // Minio server endpoint
 var accessKey = "minioadmin";
 var secretKey = "minioadmin";
 // Add Minio using the default endpoint
-builder.Services.AddMinio(accessKey, secretKey);
+//builder.Services.AddMinio(accessKey, secretKey);
 
 // Add Minio using the custom endpoint and configure additional settings for default MinioClient initialization
 builder.Services.AddMinio(configureClient => configureClient
     .WithEndpoint(endpoint)
     .WithCredentials(accessKey, secretKey)
+    .WithSSL(false) 
     .Build());
 
 
@@ -64,11 +71,16 @@ builder.Services
     .AddInfrastructureServices(builder.Configuration)
     .AddApplicationServices(builder.Configuration);
 
-var app = builder.Build();
 
+builder.Services.AddScoped<IMinioService, MinioService>();
+
+
+var app = builder.Build();
+app.UseMiddleware<CustomExceptionMiddleware>();
 app.UseRouting();
 
 app.MapControllers();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 app.MapControllers();
