@@ -94,20 +94,26 @@ public class MinioService : IMinioService
     {
         var objectName = $"{Guid.NewGuid()}_{request.videoFile.FileName}";
         
-        var filePath = Path.Combine(Path.GetTempPath(), objectName);
-        
         await using var stream = request.videoFile.OpenReadStream();
         
         await _minioClient.PutObjectAsync(
-                new PutObjectArgs()
-                    .WithBucket("videobucket")
-                    .WithObject(objectName)
-                    .WithStreamData(stream)
-                    .WithObjectSize(request.videoFile.Length)
-                    .WithContentType(request.videoFile.ContentType)
-            );
+            new PutObjectArgs()
+                .WithBucket("user-videos")
+                .WithObject(objectName)
+                .WithStreamData(stream)
+                .WithObjectSize(request.videoFile.Length)
+                .WithContentType(request.videoFile.ContentType)
+        );
         
+        var publicUrl = await GetPublicUrl("user-videos", objectName);
         
-        return Result<string>.Success(filePath);
-    }   
+        return Result<string>.Success(publicUrl);
+    }
+    
+    private Task<string> GetPublicUrl(string bucketName, string fileName)
+    {
+        var  fileUrl = $"{_configuration["MinioSettings:PublicMinioURL"]}/{bucketName}/{fileName}";
+        
+        return Task.FromResult(fileUrl);
+    }
 }
