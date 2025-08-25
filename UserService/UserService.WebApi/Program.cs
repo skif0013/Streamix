@@ -12,7 +12,7 @@ using UserService.Infrastructure.Data.InitialData;
 using UserService.Infrastructure.Interfaces.Services;
 using UserService.Infrastructure.Services;
 
-
+//fdf
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
