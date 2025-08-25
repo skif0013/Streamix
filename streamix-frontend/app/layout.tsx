@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import ReduxProvider from "@/providers/ReduxProvider";
 
 export const metadata: Metadata = {
     title: "Streamix - Live Streaming & Video Platform | Watch & Stream Content",
@@ -43,12 +43,6 @@ export const metadata: Metadata = {
     alternates: {
         canonical: "http://localhost:3000",
     },
-    viewport: {
-        width: "device-width",
-        initialScale: 1,
-        maximumScale: 1,
-    },
-    themeColor: "#9147ff",
     category: "streaming",
     robots: {
         index: true,
@@ -70,7 +64,12 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body className="antialiased">{children}</body>
+            <body className="antialiased">
+                <ReduxProvider>
+                    {children}
+                    <Toaster />
+                </ReduxProvider>
+            </body>
         </html>
     );
 }
