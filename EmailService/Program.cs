@@ -7,6 +7,12 @@ using EmailService.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5003); 
+    options.ListenAnyIP(5004);
+});
+
 Env.Load();
 
 
@@ -52,14 +58,12 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 
 
-if (app.Environment.IsDevelopment())
-{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 

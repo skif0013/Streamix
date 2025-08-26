@@ -2,6 +2,9 @@ using UserService.Application.Interfaces.Services;
 using UserService.Application.DTO;
 using UserService.Core.Results;
 using UserService.Infrastructure.Interfaces.Services;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text;
 
 namespace UserService.Infrastructure.Services;
 
@@ -37,8 +40,21 @@ public class UserService : IUserService
             var errors = string.Join(", ", result.Errors.Select(e => e.Description));
             return Result<string>.Failure($"Error creating user: {errors}");
         }
+
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         
-        Console.WriteLine($"token {await _userManager.GenerateEmailConfirmationTokenAsync(user)}");
+        
+        using var client = new HttpClient();
+        string url = "http://emailservice:5003/api/Email/verify";
+        string json = $@"{{
+            ""to"": ""{request.Email}"",
+            ""code"": ""{token}""
+        }}";
+
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await client.PostAsync(url, content);
+        
         return Result<string>.Success("user created successfully");
     }
     

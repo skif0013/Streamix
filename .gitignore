@@ -481,3 +481,4 @@ sugar.client/yarn.lock
 SugarBliss/DockerDesktopWSL/disk/docker_data.vhdx
 SugarBliss/DockerDesktopWSL/main/ext4.vhdx
 .idea
+EmailService/.env

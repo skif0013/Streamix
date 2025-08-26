@@ -1,9 +1,9 @@
 services:
   user.service:
-    image: ${DOCKER_REGISTRY-}userservice
     build:
       context: .
       dockerfile: UserService.WebApi/Dockerfile
+    image: userservice:latest
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings__DefaultConnection=Host=postgres;Database=UserDB;Username=root;Password=&Nx5$:p74K@"
@@ -12,6 +12,8 @@ services:
       - "5002:5002"
     depends_on:
       - postgres
+    networks:
+      - streamix_network
     restart: always
 
   postgres:
@@ -24,8 +26,14 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - streamix_network
     restart: always
 
 volumes:
   postgres_data:
     driver: local
+
+networks:
+  streamix_network:
+    external: true
