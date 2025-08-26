@@ -1,11 +1,10 @@
 "use client";
 
 import React from "react";
-import MediaCard from "./MediaCard";
-import { MediaGridProps } from "../types/MediaGridProps";
-import ErrorState from "./ErrorState";
-import EmptyState from "./EmptyState";
-import MediaCardSkeleton from "./MediaCardSkeleton";
+import MediaCard from "@/features/media/components/MediaCard";
+import { MediaGridProps } from "@/features/media/types/MediaGridProps";
+import { ErrorState, EmptyState } from "@/features/media/components/index";
+import MediaCardSkeleton from "@/features/media/components/MediaCardSkeleton";
 
 const MediaGrid = React.memo<MediaGridProps>(
     ({ items, isLoading = false, isEmpty = false, error = null }) => {
