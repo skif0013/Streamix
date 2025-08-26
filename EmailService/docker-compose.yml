@@ -5,8 +5,15 @@ services:
     build: .
     container_name: emailservice
     ports:
-      - "8080:8080"
+      - "5003:5003"
+      - "5004:5004"
     env_file: .env  
     environment:
       ASPNETCORE_ENVIRONMENT: Production
+    networks:
+      - streamix_network
     restart: unless-stopped
+
+networks:
+  streamix_network:
+    external: true
