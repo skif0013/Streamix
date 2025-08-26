@@ -8,8 +8,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings__DefaultConnection=Host=postgres;Database=UserDB;Username=root;Password=&Nx5$:p74K@"
     ports:
-      - "5001:8080"
-      - "5002:8001"
+      - "5001:5001"
+      - "5002:5002"
     depends_on:
       - postgres
     restart: always

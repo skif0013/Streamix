@@ -15,6 +15,12 @@ using UserService.Infrastructure.Services;
 //fdf
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5001); 
+    options.ListenAnyIP(5002);
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
