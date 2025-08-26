@@ -113,8 +113,11 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    // Ensure database is created and migrations are applied automatically on startup
+    var dbContext = services.GetRequiredService<ApplicationDbContext>();
+    await dbContext.Database.MigrateAsync();
+
     var roleManager = services.GetRequiredService<RoleManager<RoleIdentity>>();
-    
     await RoleInitData.InitializeAsync(roleManager);
 }
 
