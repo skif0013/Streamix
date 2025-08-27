@@ -30,6 +30,7 @@ builder.Services.AddMinio(configureClient => configureClient
     .WithCredentials(accessKey, secretKey)
     .WithSSL(false) 
     .Build());
+    
 
 
 builder.Services.AddSwaggerGen(option =>
