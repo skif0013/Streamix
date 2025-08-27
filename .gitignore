@@ -427,3 +427,6 @@ VideoService/VideoService.WebApi/obj/project.assets.json
 /VideoService/VideoService.WebApi/obj
 VideoService/VideoService.WebApi/obj/project.assets.json
 /VideoService/.idea
+.DS_Store
+EmailService/.env
+/UserService/.idea
