@@ -31,7 +31,7 @@ const StreamixHomePage = React.memo(() => {
             <main className="container mx-auto">
                 <Tabs defaultValue="videos" className="w-full">
                     <div className="sticky z-40 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                        <div className="container mx-auto p-2">
+                        <div className="container mx-auto pb-2 px-4">
                             <TabsList className="relative flex w-full overflow-x-auto no-scrollbar justify-start rounded-xl border bg-muted/40 dark:bg-muted/20 backdrop-blur p-0 shadow-sm">
                                 <TabsTrigger
                                     value="videos"

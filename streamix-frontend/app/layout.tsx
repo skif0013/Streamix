@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import ReduxProvider from "@/providers/ReduxProvider";
+import Header from "@/layout/header";
 
 export const metadata: Metadata = {
     title: "Streamix - Live Streaming & Video Platform | Watch & Stream Content",
@@ -64,9 +65,10 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body className="antialiased">
+            <body className="antialiased flex flex-col min-h-screen">
                 <ReduxProvider>
-                    {children}
+                    <Header />
+                    <main className="flex-1">{children}</main>
                     <Toaster />
                 </ReduxProvider>
             </body>
