@@ -2,6 +2,7 @@ using System.Net;
 using Minio;
 using Minio.DataModel.Args;
 using VideoService.Application.DTO;
+using VideoService.Application.Model;
 using VideoService.Core.Results;
 
 namespace VideoService.Application.Services;
@@ -19,8 +20,6 @@ public class MinioService : IMinioService
 
     public async Task<Result<string>> CreateBucket(string bucketName)
     {
-        //bucketName = bucketName.ToLowerInvariant();
-
         var bucketExists = await _minioClient.BucketExistsAsync(
             new BucketExistsArgs().WithBucket(bucketName)
         );
@@ -90,9 +89,11 @@ public class MinioService : IMinioService
         return Result<string>.Success("Object deleted successfully");
     }
 
-    public async Task<Result<string>> UploadVideo(UploadUserVideo request)
+    public async Task<Result<string>> UploadVideo(UploadUserVideo request, Guid userId)
     {
-        var objectName = $"{Guid.NewGuid()}_{request.videoFile.FileName}";
+        var objectName = $"{userId}/{Guid.NewGuid()}_{request.videoFile.FileName}";
+        
+        var publicUrl = await GetPublicUrl("user-videos", objectName);
         
         await using var stream = request.videoFile.OpenReadStream();
         
@@ -105,15 +106,25 @@ public class MinioService : IMinioService
                 .WithContentType(request.videoFile.ContentType)
         );
         
-        var publicUrl = await GetPublicUrl("user-videos", objectName);
-        
         return Result<string>.Success(publicUrl);
+    }
+
+    public async Task<Result<string>> DeleteVideo(string objectName)
+    {
+        const string bucketName = "user-videos";    
+
+        await _minioClient.RemoveObjectAsync(
+            new RemoveObjectArgs()
+                .WithBucket(bucketName)
+                .WithObject(objectName)
+        );
+        
+        return Result<string>.Success("Video deleted successfully from storage");
     }
     
     private Task<string> GetPublicUrl(string bucketName, string fileName)
     {
-        var  fileUrl = $"{_configuration["MinioSettings:PublicMinioURL"]}/{bucketName}/{fileName}";
-        
+        var fileUrl = $"{_configuration["MinioSettings:PublicMinioURL"]}/{bucketName}/{fileName}";
         return Task.FromResult(fileUrl);
     }
 }

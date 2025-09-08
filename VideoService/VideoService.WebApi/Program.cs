@@ -6,6 +6,7 @@ using Minio;
 using VideoService.Application;
 using VideoService.Application.Interfaces.Services;
 using VideoService.Application.Services;
+using VideoService.Infrastructura.Services;
 using VideoService.Infrastructure.Data;
 using VideoService.Middlewares;
 
@@ -74,6 +75,8 @@ builder.Services
 
 
 builder.Services.AddScoped<IMinioService, MinioService>();
+builder.Services.AddScoped<IAvatarService, AvatarService>();
+builder.Services.AddScoped<IVideoService, VideoWebService>();
 
 builder.Services.AddFluentValidationAutoValidation();
 

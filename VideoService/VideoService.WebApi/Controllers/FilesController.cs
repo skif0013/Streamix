@@ -42,12 +42,4 @@ public class FilesController : ControllerBase
         var result = await _minioService.DeleteObj(bucketName, fileName);
         return result;
     }
-
-    [HttpPost("UploadVideo")]
-    [Consumes("multipart/form-data")]
-    public async Task<Result<string>> UploadVideo([FromForm]UploadUserVideo request)
-    {
-        var result = await _minioService.UploadVideo(request);
-        return result;
-    }
 }
