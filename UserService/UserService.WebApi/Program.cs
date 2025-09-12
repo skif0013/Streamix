@@ -110,13 +110,13 @@ builder.Services.AddAuthorization(options =>
 });
 
 var app = builder.Build();
-using (var scope = app.Services.CreateScope())
+/*using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var roleManager = services.GetRequiredService<RoleManager<RoleIdentity>>();
     
     await RoleInitData.InitializeAsync(roleManager);
-}
+}*/
 
 if (app.Environment.IsDevelopment())
 {

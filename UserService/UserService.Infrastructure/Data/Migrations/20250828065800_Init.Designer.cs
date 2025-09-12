@@ -13,8 +13,8 @@ using UserService.Infrastructure.Data;
 namespace UserService.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250721173426_Initial")]
-    partial class Initial
+    [Migration("20250828065800_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
