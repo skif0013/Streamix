@@ -18,10 +18,10 @@ public class AvatarsController : ControllerBase
     [Consumes("multipart/form-data")]
     public async Task<Result<Avatar>> UploadAvatar([FromForm] UploadUserAvatarRequestDto request, Guid userId)
     {
-        //var userIdClaim = User.FindFirst("userId")?.Value;
+        var userIdClaim = User.FindFirst("userId")?.Value;
         
-        //userId = Guid.Parse(userIdClaim);
-        userId = Guid.NewGuid();
+        userId = Guid.Parse(userIdClaim);
+        
         return await _avatarService.UploadAvatarAsync(request,userId);
     }
 }

@@ -27,6 +27,5 @@ public class UploadUserAvatarValidator : AbstractValidator<UploadUserAvatarReque
         
         RuleFor(x => x.validate)
             .NotNull().WithMessage("validate is required__52");
-            
     }
 }
