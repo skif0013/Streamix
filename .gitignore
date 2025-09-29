@@ -430,3 +430,8 @@ VideoService/VideoService.WebApi/obj/project.assets.json
 .DS_Store
 EmailService/.env
 /UserService/.idea
+/VideoService/VideoService.WebApi/obj
+VideoService/.idea/.idea.VideoService/Docker/docker-compose.generated.override.yml
+VideoService/VideoService.WebApi/obj/project.assets.json
+VideoService/VideoService.WebApi/obj/project.nuget.cache
+VideoService/.idea/.idea.VideoService/Docker/docker-compose.generated.override.yml

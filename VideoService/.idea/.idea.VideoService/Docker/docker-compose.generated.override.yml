@@ -2,7 +2,7 @@
 services:
   VideoService.server:
     build:
-      context: "C:\\Users\\Daniil dev\\RiderProjects\\EmailService\\VideoService"
+      context: "/Users/skif/RiderProjects/Streamix/VideoService"
       dockerfile: "VideoService.WebApi/Dockerfile"
       target: "base"
     command: []
@@ -14,7 +14,7 @@ services:
     image: "videoservice:dev"
     ports: []
     volumes:
-    - "C:\\Users\\Daniil dev\\RiderProjects\\EmailService\\VideoService\\VideoService.WebApi:/app:rw"
-    - "C:\\Users\\Daniil dev\\RiderProjects\\EmailService\\VideoService:/src:rw"
-    - "C:\\Users\\Daniil dev\\.nuget\\packages:/root/.nuget/packages"
+    - "/Users/skif/RiderProjects/Streamix/VideoService/VideoService.WebApi:/app:rw"
+    - "/Users/skif/RiderProjects/Streamix/VideoService:/src:rw"
+    - "/Users/skif/.nuget/packages:/root/.nuget/packages"
     working_dir: "/app"
