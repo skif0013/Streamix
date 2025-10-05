@@ -13,8 +13,8 @@ using UserService.Infrastructure.Data;
 namespace UserService.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250828065800_Init")]
-    partial class Init
+    [Migration("20251005162709_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -164,6 +164,38 @@ namespace UserService.Infrastructure.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("UserService.Core.Models.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpiresOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("UserService.Core.Models.UserInfo", b =>
@@ -341,6 +373,15 @@ namespace UserService.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("UserService.Core.Models.RefreshToken", b =>
+                {
+                    b.HasOne("UserService.Infrastructure.Identity.UserIdentity", null)
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("UserService.Core.Models.UserInfo", b =>
                 {
                     b.HasOne("UserService.Infrastructure.Identity.UserIdentity", null)
@@ -352,6 +393,8 @@ namespace UserService.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("UserService.Infrastructure.Identity.UserIdentity", b =>
                 {
+                    b.Navigation("RefreshTokens");
+
                     b.Navigation("UserInfo")
                         .IsRequired();
                 });

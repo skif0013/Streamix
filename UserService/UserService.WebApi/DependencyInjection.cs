@@ -9,6 +9,7 @@ namespace UserService.WebApi
         {
             return services;
         }
+
         public static WebApplication UseApiServices(this WebApplication app)
         {
             app.UseMiddleware<CustomExceptionMiddleware>();

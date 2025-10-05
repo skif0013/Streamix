@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using sugar.Core.Abstractions;
+using UserService.Core.Abstractions;
+
 
 namespace UserService.Core.Models;
 

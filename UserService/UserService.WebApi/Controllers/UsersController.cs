@@ -1,3 +1,5 @@
+using UserService.Infrastructure.Interfaces.Services;
+
 namespace UserService.WebApi.Controllers
 {
     [ApiController]
@@ -5,10 +7,12 @@ namespace UserService.WebApi.Controllers
     public class UsersController : ControllerBase
     {
     private readonly IUserService _userService;
+    private readonly ITokenService _tokenService;
     
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, ITokenService tokenService)
         {
             _userService = userService;
+            _tokenService = tokenService;
         }
         [HttpPost("register")]
         public async Task<Result<string>> RegisterAsync(UserRequestDTO request)
@@ -42,6 +46,13 @@ namespace UserService.WebApi.Controllers
         public async Task<Result<string>> ConfimEmailAsync(string email, [FromHeader] string token)
         {
             var result = await _userService.ConfirmEmailAsync(email, token);
+            return result;
+        }
+
+        [HttpPost("UploadTokens")]
+        public async Task<Result<RefreshTokenResponseDto>> UploadTokensAsync(string refreshToken)
+        {
+            var result = await _tokenService.UploadTokensAsync(refreshToken);
             return result;
         }
     }

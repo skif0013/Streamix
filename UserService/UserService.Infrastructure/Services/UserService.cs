@@ -5,6 +5,7 @@ using UserService.Infrastructure.Interfaces.Services;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
+using UserService.Core.Models;
 
 namespace UserService.Infrastructure.Services;
 
@@ -13,17 +14,20 @@ public class UserService : IUserService
     private readonly UserManager<UserIdentity> _userManager;
     private readonly RoleManager<RoleIdentity> _roleManager;
     private readonly ITokenService _tokenService;
+    private readonly ApplicationDbContext _context;
     
 
     public UserService(
         UserManager<UserIdentity> userManager,
         RoleManager<RoleIdentity> roleManager,
-        ITokenService tokenService
+        ITokenService tokenService,
+        ApplicationDbContext context
     )
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _tokenService = tokenService;
+        _context = context;
     }
     
     public async Task<Result<string>> RegisterAsync(UserRequestDTO request)
@@ -44,23 +48,23 @@ public class UserService : IUserService
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         
         
-        using var client = new HttpClient();
+        /*using var client = new HttpClient();
         string url = "http://emailservice:5003/api/Email/verify";
         string json = $@"{{
             ""to"": ""{request.Email}"",
             ""code"": ""{token}""
-        }}";
+        }}";*/
 
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        //var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await client.PostAsync(url, content);
+        //var response = await client.PostAsync(url, content);
         
         return Result<string>.Success("user created successfully");
     }
     
     public async Task<Result<AuthResponse>> AuthenticateAsync(AuthRequest request)
     {
-        var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Email == request.Email);
+        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
         if (user == null)
         {
             return Result<AuthResponse>.Failure("Invalid Email");
@@ -78,13 +82,14 @@ public class UserService : IUserService
             return Result<AuthResponse>.Failure("Invalid Password");
         }
         
-        var token = await _tokenService.CreateTokenAsync(user);
-
+        var tokens = await _tokenService.CreateRefreshTokenAsync(user);
+        
         return Result<AuthResponse>.Success(new AuthResponse
         {
             Username = user.UserName,
             Email = user.Email,
-            Token = token
+            Token = tokens.AccessToken,
+            RefreshToken = tokens.RefreshToken
         });
     }
     

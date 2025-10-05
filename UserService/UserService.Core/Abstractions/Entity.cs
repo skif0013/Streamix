@@ -1,4 +1,4 @@
-﻿namespace sugar.Core.Abstractions
+﻿namespace UserService.Core.Abstractions
 {
     public abstract class Entity<T> : IEntity<T>
     {

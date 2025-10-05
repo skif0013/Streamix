@@ -1,4 +1,4 @@
-﻿namespace sugar.Core.Abstractions
+﻿namespace UserService.Core.Abstractions
 {
     public interface IEntity<T> : IEntity
     {

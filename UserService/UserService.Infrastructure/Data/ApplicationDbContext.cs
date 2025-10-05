@@ -10,7 +10,7 @@ public class ApplicationDbContext : IdentityDbContext<UserIdentity, IdentityRole
     }
     
     public DbSet<UserInfo> UserInfo { get; set; }
-    //public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
     
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -30,19 +30,18 @@ public class ApplicationDbContext : IdentityDbContext<UserIdentity, IdentityRole
             .OnDelete(DeleteBehavior.Cascade);
         
        
-        builder.Entity<RefreshToken>(entity =>
-        {
-            entity.HasKey(rt => rt.Id);
-
-            
-            entity.HasOne(rt => rt.User)
-                .WithMany(u => u.RefreshTokens)
-                .HasForeignKey(rt => rt.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasIndex(rt => rt.Token).IsUnique();
-        });
-    
-            
+        /*builder.Entity<RefreshToken>()
+            .HasQueryFilter(rt => rt.DeletedAt == null)
+            .HasOne<UserIdentity>()
+            .WithMany(u => u.RefreshTokens)
+            .HasForeignKey(rt => rt.UserId)
+            .OnDelete(DeleteBehavior.Cascade);*/
+        
+        builder.Entity<RefreshToken>()
+            .HasQueryFilter(rt => rt.DeletedAt == null && rt.ExpiresOnUtc > DateTime.UtcNow)
+            .HasOne<UserIdentity>()
+            .WithMany(u => u.RefreshTokens)
+            .HasForeignKey(rt => rt.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
-}
+}  
