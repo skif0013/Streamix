@@ -6,7 +6,11 @@ services:
     container_name: emailservice
     ports:
       - "8080:8080"
-    env_file: .env  
     environment:
-      ASPNETCORE_ENVIRONMENT: Production
+      SmtpSettings__Host: ${SmtpSettings__Host}
+      SmtpSettings__Port: ${SmtpSettings__Port}
+      SmtpSettings__Username: ${SmtpSettings__Username}
+      SmtpSettings__Password: ${SmtpSettings__Password}
+      SmtpSettings__EnableSsl: ${SmtpSettings__EnableSsl}
+      SmtpSettings__SenderEmail: ${SmtpSettings__SenderEmail}
     restart: unless-stopped

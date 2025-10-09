@@ -4,8 +4,6 @@ using System.Net.Mail;
 using System.Text;
 using Microsoft.Extensions.Options;
 
-
-
 namespace EmailService.Services;
 
 public class EmailService : IEmailService
@@ -23,10 +21,10 @@ public class EmailService : IEmailService
     
     public async Task SendEmailAsync(EmailRequest request)
     {
-      using  var client = _smtpClientFactory.CreateClient();
+      using var client = _smtpClientFactory.CreateClient();
 
-      var senderEmail = Environment.GetEnvironmentVariable("SENDER_EMAIL");
-            
+      var senderEmail = _settings.SenderEmail;
+      
       using var mailMessage = new MailMessage
         {
             From = new MailAddress(senderEmail, senderEmail),
@@ -48,15 +46,15 @@ public class EmailService : IEmailService
     public async Task SendVerificationCodeAsync(EmailVerification verification)
     {
         var subject =  _configuration?["EmailVerification:RegisterVerification:Subject"] 
-                      ?? "Код подтверждения";
+                      ?? "Email confirmation code";
     
         var bodyTemplate = _configuration?["EmailVerification:RegisterVerification:Body"] 
-                           ?? "Ваш код подтверждения: {code}";
+                           ?? "Your email confirmation code: {code}";
     
         var body = bodyTemplate.Replace("{code}", verification.Code);
         
         var senderEmail = _settings?.Username ?? Environment.GetEnvironmentVariable("SENDER_EMAIL") 
-            ?? throw new InvalidOperationException("Не задан email отправителя");
+            ?? throw new InvalidOperationException("Sender email is not configured.");
         using var mailMessage = new MailMessage
         {
             From = new MailAddress(senderEmail),
