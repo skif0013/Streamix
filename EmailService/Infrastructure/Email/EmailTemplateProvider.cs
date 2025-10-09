@@ -15,12 +15,12 @@
         {
             string template = _config["EmailTemplates:Verification:Body"];
             return template?.Replace("{code}", code) 
-                   ?? $"Ваш код подтверждения: {code}"; // fallback
+                   ?? $"Your email confirmation code: {code}"; 
         }
 
         public string GetVerificationSubject()
         {
             return _config["EmailTemplates:Verification:Subject"] 
-                   ?? "Подтверждение email"; // fallback
+                   ?? "Email confirmation code"; 
         }
     }
