@@ -20,9 +20,7 @@ public class AvatarsController : ControllerBase
     [Consumes("multipart/form-data")]
     public async Task<Result<Avatar>> Upload([FromForm] UploadUserAvatarRequestDto request, [FromQuery] Guid userId)
     {
-        if (request == null || request.File == null)
-            return Result<Avatar>.Failure("Файл обязателен");
-
+        
         if (userId == Guid.Empty)
         {
             var claim = User.FindFirst("userId")?.Value;

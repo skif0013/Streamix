@@ -12,7 +12,7 @@ using VideoService.Infrastructure.Data;
 namespace VideoService.Infrastructura.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250929012651_Initial")]
+    [Migration("20251009191803_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

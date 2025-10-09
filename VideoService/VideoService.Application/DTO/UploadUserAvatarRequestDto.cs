@@ -14,7 +14,7 @@ public class UploadUserAvatarValidator : AbstractValidator<UploadUserAvatarReque
 {
     public UploadUserAvatarValidator()
     {
-         RuleFor(x => x.UserId).NotNull().WithMessage("UserId is required");
+         /*RuleFor(x => x.UserId).NotNull().WithMessage("UserId is required");
         
         
         RuleFor(x => x.File)
@@ -26,6 +26,6 @@ public class UploadUserAvatarValidator : AbstractValidator<UploadUserAvatarReque
         
         
         RuleFor(x => x.validate)
-            .NotNull().WithMessage("validate is required__52");
+            .NotNull().WithMessage("validate is required__52");*/
     }
 }
