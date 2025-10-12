@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using UserService.Core.Abstractions;
 
-
 namespace UserService.Core.Models;
 
 public class RefreshToken : Entity<Guid>

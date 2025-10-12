@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using UserService.Core.Models;
+﻿using UserService.Core.Models;
 
 namespace UserService.Infrastructure.Identity
 {

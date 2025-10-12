@@ -12,7 +12,6 @@ using UserService.Infrastructure.Data.InitialData;
 using UserService.Infrastructure.Interfaces.Services;
 using UserService.Infrastructure.Services;
 
-//fdf
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(options =>
@@ -110,20 +109,19 @@ builder.Services.AddAuthorization(options =>
 });
 
 var app = builder.Build();
-/*using (var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var roleManager = services.GetRequiredService<RoleManager<RoleIdentity>>();
     
     await RoleInitData.InitializeAsync(roleManager);
-}*/
+}
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 app.UseHttpsRedirection();
 app.UseRouting();

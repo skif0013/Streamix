@@ -2,10 +2,6 @@ using UserService.Application.Interfaces.Services;
 using UserService.Application.DTO;
 using UserService.Core.Results;
 using UserService.Infrastructure.Interfaces.Services;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text;
-using UserService.Core.Models;
 
 namespace UserService.Infrastructure.Services;
 
@@ -14,20 +10,16 @@ public class UserService : IUserService
     private readonly UserManager<UserIdentity> _userManager;
     private readonly RoleManager<RoleIdentity> _roleManager;
     private readonly ITokenService _tokenService;
-    private readonly ApplicationDbContext _context;
-    
 
     public UserService(
         UserManager<UserIdentity> userManager,
         RoleManager<RoleIdentity> roleManager,
-        ITokenService tokenService,
-        ApplicationDbContext context
+        ITokenService tokenService
     )
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _tokenService = tokenService;
-        _context = context;
     }
     
     public async Task<Result<string>> RegisterAsync(UserRequestDTO request)
@@ -46,7 +38,7 @@ public class UserService : IUserService
         }
 
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        
+        Console.WriteLine(token);
         
         /*using var client = new HttpClient();
         string url = "http://emailservice:5003/api/Email/verify";
@@ -103,7 +95,6 @@ public class UserService : IUserService
         
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
         Console.WriteLine(token);
-        // push token to RabbitMQ
         
         return Result<string>.Success("Password reset successfully");
     }

@@ -1,5 +1,3 @@
-using System.Security.AccessControl;
-
 namespace UserService.Core.Models;
 
 public interface IUser

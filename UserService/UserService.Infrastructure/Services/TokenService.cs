@@ -1,10 +1,8 @@
 using Microsoft.IdentityModel.Tokens;
-//using UserService.Infrastructure.Interfaces.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.AspNetCore.Http;
 using UserService.Application.DTO;
 using UserService.Core.Models;
 using UserService.Core.Results;
@@ -16,22 +14,19 @@ public class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;
     private readonly UserManager<UserIdentity> _userManager;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ApplicationDbContext _context;
 
     public TokenService(
         IConfiguration configuration,
         UserManager<UserIdentity> userManager,
-        IHttpContextAccessor httpContextAccessor,
         ApplicationDbContext context)
     {
         _configuration = configuration;
         _userManager = userManager;
-        _httpContextAccessor = httpContextAccessor;
         _context = context;
     }
 
-    public async Task<string> CreateTokenAsync(UserIdentity user)
+    private async Task<string> CreateTokenAsync(UserIdentity user)
     {
         int expirationMinutes = int.Parse(_configuration["JwtTokenSettings:ExparingTimeMinute"]!);
         var expiration = DateTime.UtcNow.AddMinutes(expirationMinutes);
@@ -77,13 +72,13 @@ public class TokenService : ITokenService
         refreshTokenFromDb.DeletedAt = DateTime.UtcNow;
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == refreshTokenFromDb.UserId);
         
-        var NewaccessToken = await CreateTokenAsync(user);
-        var NewRefreshToken = await GenereteRefreshTokenAsync();
+        var newAccessToken = await CreateTokenAsync(user);
+        var newRefreshToken = await GenereteRefreshTokenAsync();
 
         RefreshToken RefreshToken = new RefreshToken
         {
             Id = Guid.NewGuid(),
-            Token = NewRefreshToken,
+            Token = newRefreshToken,
             UserId = user.Id,
             ExpiresOnUtc = DateTime.UtcNow.AddDays(7)
         };
@@ -93,8 +88,8 @@ public class TokenService : ITokenService
         
         return Result<RefreshTokenResponseDto>.Success(new RefreshTokenResponseDto
         {
-            AccessToken = NewaccessToken,
-            RefreshToken = NewRefreshToken
+            AccessToken = newAccessToken,
+            RefreshToken = newRefreshToken
         });
     }
     
