@@ -1,0 +1,11 @@
+/UserService/.idea
+/UserService/UserService.Application/obj
+/UserService/UserService.Core/obj
+/UserService/UserService.Infrastructure/obj
+/UserService/UserService.WebApi/obj
+/VideoService/.idea
+/VideoService
+/UserService/UserService.Application/bin
+/UserService/UserService.Core/bin
+/UserService/UserService.Infrastructure/bin
+/UserService/UserService.WebApi/bin
