@@ -21,9 +21,12 @@ public class AvatarsController : ControllerBase
     public async Task<Result<Avatar>> Upload([FromForm] UploadUserAvatarRequestDto request, [FromQuery] Guid userId)
     {
         
+        
+        var claim = User.FindFirst("userId")?.Value;
+        Console.WriteLine($"Claim userId: {claim}");
         if (userId == Guid.Empty)
         {
-            var claim = User.FindFirst("userId")?.Value;
+            
             if (!string.IsNullOrWhiteSpace(claim) && Guid.TryParse(claim, out var parsed))
                 userId = parsed;
         }
