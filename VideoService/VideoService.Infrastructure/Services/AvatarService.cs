@@ -39,7 +39,7 @@ public class AvatarService : IAvatarService
 
             _context.Avatars.Remove(existingAvatar);
             await _context.SaveChangesAsync();
-        }
+        }   
 
         var avatar = new Avatar
         {

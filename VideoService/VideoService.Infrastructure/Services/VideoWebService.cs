@@ -2,7 +2,7 @@ using VideoService.Application.DTO;
 using VideoService.Application.Model;
 using VideoService.Core.Results;
 
-namespace VideoService.Infrastructura.Services;
+namespace VideoService.Infrastructure.Services;
 
 public class VideoWebService : IVideoService
 {

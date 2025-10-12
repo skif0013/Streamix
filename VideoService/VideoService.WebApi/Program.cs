@@ -6,7 +6,7 @@ using Minio;
 using VideoService.Application;
 using VideoService.Application.Interfaces.Services;
 using VideoService.Application.Services;
-using VideoService.Infrastructura.Services;
+using VideoService.Infrastructure.Services;
 using VideoService.Infrastructure.Data;
 using VideoService.Middlewares;
 
