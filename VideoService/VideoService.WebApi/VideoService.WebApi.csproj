@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>VideoService.WebApi</RootNamespace>
+        <UserSecretsId>07ae0fce-b2ec-47bc-92e8-79e39129df77</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>

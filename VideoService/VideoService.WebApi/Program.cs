@@ -81,6 +81,14 @@ builder.Services.AddScoped<IVideoService, VideoWebService>();
 builder.Services.AddFluentValidationAutoValidation();
 
 var app = builder.Build();
+
+// Apply migrations on startup
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate();
+}
+
 app.UseMiddleware<CustomExceptionMiddleware>();
 app.UseRouting();
 
