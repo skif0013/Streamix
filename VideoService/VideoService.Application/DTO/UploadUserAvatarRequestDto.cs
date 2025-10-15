@@ -4,9 +4,6 @@ namespace VideoService.Application.DTO;
 
 public class UploadUserAvatarRequestDto
 {
-    public Guid UserId { get; set; }
-
-    public string validate { get; set; }
     public IFormFile File { get; set; }
 }
 

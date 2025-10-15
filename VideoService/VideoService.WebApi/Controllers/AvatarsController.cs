@@ -18,21 +18,12 @@ public class AvatarsController : ControllerBase
     // POST api/avatars/upload?userId=...
     [HttpPost("upload")]
     [Consumes("multipart/form-data")]
-    public async Task<Result<Avatar>> Upload([FromForm] UploadUserAvatarRequestDto request, [FromQuery] Guid userId)
+    public async Task<Result<Avatar>> Upload([FromForm] UploadUserAvatarRequestDto request)
     {
         
         
-        var claim = User.FindFirst("userId")?.Value;
-        Console.WriteLine($"Claim userId: {claim}");
-        if (userId == Guid.Empty)
-        {
-            
-            if (!string.IsNullOrWhiteSpace(claim) && Guid.TryParse(claim, out var parsed))
-                userId = parsed;
-        }
-
-        if (userId == Guid.Empty)
-            return Result<Avatar>.Failure("userId не передан");
+        var userId = Guid.Parse(User.FindFirst("userId")?.Value);
+        
 
         return await _avatarService.UploadAvatarAsync(request, userId);
     }
