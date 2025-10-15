@@ -28,7 +28,7 @@ public class TokenService : ITokenService
 
     private async Task<string> CreateTokenAsync(UserIdentity user)
     {
-        int expirationMinutes = int.Parse(_configuration["JwtTokenSettings:ExparingTimeMinute"]!);
+        int expirationMinutes = 999; //int.Parse(_configuration["JwtTokenSettings:ExparingTimeMinute"]!);
         var expiration = DateTime.UtcNow.AddMinutes(expirationMinutes);
         var token = CreateJwtToken(
             await CreateClaimsAsync(user),
