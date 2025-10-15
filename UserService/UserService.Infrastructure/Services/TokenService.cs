@@ -100,8 +100,8 @@ public class TokenService : ITokenService
 
     private JwtSecurityToken CreateJwtToken(List<Claim> claims, SigningCredentials credentials, DateTime expiration) =>
         new(
-            _configuration["JwtTokenSettings:ValidIssuer"],
-            _configuration["JwtTokenSettings:ValidAudience"],
+            "ExampleIssuer",//_configuration["JwtTokenSettings:ValidIssuer"],
+            "ValidAudience",//_configuration["JwtTokenSettings:ValidAudience"],
             claims,
             expires: expiration,
             signingCredentials: credentials
@@ -109,7 +109,7 @@ public class TokenService : ITokenService
 
     private async Task<List<Claim>> CreateClaimsAsync(UserIdentity user)
     {
-        var jwtSub = _configuration["JwtTokenSettings:JwtRegisteredClaimNamesSub"];
+        var jwtSub = "345h098bb8reberbwr4vvb8945";//_configuration["JwtTokenSettings:JwtRegisteredClaimNamesSub"];
 
         var claims = new List<Claim>
         {
@@ -132,7 +132,7 @@ public class TokenService : ITokenService
 
     private SigningCredentials CreateSigningCredentials()
     {
-        var symmetricSecurityKey = _configuration["JwtTokenSettings:SymmetricSecurityKey"];
+        var symmetricSecurityKey = "fvh2456477hth44j6wfds98dq9hp8bqh9ubq9gjig3qr0";//_configuration["JwtTokenSettings:SymmetricSecurityKey"];
 
         return new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(symmetricSecurityKey)),
