@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using UserService.Infrastructure.Data;
 using UserService.Infrastructure.Identity;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.IdentityModel.Tokens;
 using UserService.Infrastructure.Data.InitialData;
 using UserService.Infrastructure.Interfaces.Services;
