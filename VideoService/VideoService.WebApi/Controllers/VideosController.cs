@@ -15,25 +15,24 @@ public class VideosController : ControllerBase
         _videoService = videoService;
     }
 
-    [HttpGet("user/{userId}")]
-    public async Task<Result<List<Video>>> GetUserVideos(Guid userId)
+    [HttpGet()]
+    public async Task<Result<List<Video>>> GetUserVideos()
     {
+        var userId = Guid.Parse(User.FindFirst("userId")?.Value);
         return await _videoService.GetUserVideos(userId);
     }
 
-    [HttpDelete("{videoId}")]
-    public async Task<Result<string>> DeleteVideo(Guid videoId, Guid userId)
+    [HttpDelete("")]
+    public async Task<Result<string>> DeleteVideo(Guid videoId)
     {
+        var userId = Guid.Parse(User.FindFirst("userId")?.Value);
         return await _videoService.DeleteVideo(videoId, userId);
     }
 
-    [HttpPost("upload")]
-    public async Task<Result<Video>> UploadVideo(UploadUserVideo request, Guid userId)
+    [HttpPost()]
+    public async Task<Result<Video>> UploadVideo(UploadUserVideo request)
     {
-        var userIdClaim = User.FindFirst("userId")?.Value;
-        
-        userId = Guid.Parse(userIdClaim);
-        
+        var userId = Guid.Parse(User.FindFirst("userId")?.Value);
         return   await _videoService.UploadVideo(request,userId);
     }
 }

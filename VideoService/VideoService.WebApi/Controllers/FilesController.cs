@@ -1,4 +1,3 @@
-using Minio.DataModel.Args;
 using VideoService.Application.DTO;
 using VideoService.Application.Interfaces.Services;
 

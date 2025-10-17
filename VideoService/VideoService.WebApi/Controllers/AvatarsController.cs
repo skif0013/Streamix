@@ -20,41 +20,32 @@ public class AvatarsController : ControllerBase
     [Consumes("multipart/form-data")]
     public async Task<Result<Avatar>> Upload([FromForm] UploadUserAvatarRequestDto request)
     {
-        
-        
         var userId = Guid.Parse(User.FindFirst("userId")?.Value);
-        
-
         return await _avatarService.UploadAvatarAsync(request, userId);
     }
 
     // GET api/avatars/{userId}
-    [HttpGet("{userId:guid}")]
-    public async Task<Result<string>> Get(Guid userId)
+    [HttpGet()]
+    public async Task<Result<string>> Get()
     {
-        if (userId == Guid.Empty)
-            return Result<string>.Failure("userId пустой");
+        var userId = Guid.Parse(User.FindFirst("userId")?.Value);
         return await _avatarService.GetAvatarAsync(userId);
     }
 
     // PUT api/avatars/{userId}
     // Тело запроса: просто строка ("https://.../avatar.png")
-    [HttpPut("{userId:guid}")]
-    public async Task<Result<string>> Update(Guid userId, [FromBody] string avatarUrl)
+    [HttpPut("")]
+    public async Task<Result<string>> Update([FromBody] string avatarUrl)
     {
-        if (userId == Guid.Empty)
-            return Result<string>.Failure("userId пустой");
-        if (string.IsNullOrWhiteSpace(avatarUrl))
-            return Result<string>.Failure("avatarUrl пустой");
+        var userId = Guid.Parse(User.FindFirst("userId")?.Value);
         return await _avatarService.UpdateAvatarAsync(userId, avatarUrl);
     }
 
     // DELETE api/avatars/{userId}
-    [HttpDelete("{userId:guid}")]
-    public async Task<Result<string>> Delete(Guid userId)
+    [HttpDelete("")]
+    public async Task<Result<string>> Delete()
     {
-        if (userId == Guid.Empty)
-            return Result<string>.Failure("userId пустой");
+        var userId = Guid.Parse(User.FindFirst("userId")?.Value);
         return await _avatarService.RemoveAvatarAsync(userId);
     }
 }
