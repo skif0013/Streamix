@@ -1,0 +1,12 @@
+# mediamtx.yml
+server:
+  # Порты, на которых слушаем подключения
+  rtmpAddress: :1935      # для публикации RTMP потоков
+  hlsAddress: :8888       # HLS доступен через HTTP
+  webrtcAddress: :8889    # WebRTC через HTTP
+
+paths:
+  live:
+    test:
+      hls: yes
+      webrtc: yes

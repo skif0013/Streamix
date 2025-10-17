@@ -1,0 +1,29 @@
+﻿version: "3.9"
+
+services:
+  # 🎥 Твой .NET Web API
+  streamingservice:
+    build:
+      context: .
+      dockerfile: StreamingService.WebApi/Dockerfile
+    container_name: streamingservice
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Streaming__Host=http://mediamtx:8889  # ссылка на MediaMTX внутри docker-сети
+    depends_on:
+      - mediamtx
+
+  # 🧩 MediaMTX — RTMP/HLS сервер
+  mediamtx:
+    image: bluenviron/mediamtx:latest
+    container_name: mediamtx
+    restart: unless-stopped
+    ports:
+      - "1935:1935"   # RTMP (для OBS)
+      - "8888:8888"   # Web UI
+      - "8889:8889"   # HLS (для клиентов)
+    volumes:
+      - ./mediamtx.yml:/mediamtx.yaml:ro   # конфиг
+      - ./hls:/hls                        # HLS сегменты
