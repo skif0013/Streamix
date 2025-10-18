@@ -1,5 +1,3 @@
-using VideoService.Application.DTO;
-
 namespace VideoService.Application.Interfaces.Services;
 
 public interface IMinioService

@@ -7,8 +7,6 @@ public class Avatar
     public string FileName { get; set; }
     public long FileSize { get; set; }
     public DateTime UploadDate { get; set; }
-    
-    
     public string FileUrl { get; set; }
     
 }

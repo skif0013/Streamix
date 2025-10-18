@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http.Extensions;
-
 namespace VideoService.Application.Model;
 
 public class Video

@@ -73,7 +73,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services
     .AddWebApiServices(builder.Configuration)
-    .AddInfrastructureServices(builder.Configuration)
     .AddApplicationServices(builder.Configuration);
 
 

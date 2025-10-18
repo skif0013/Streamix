@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace VideoService.Application.DTO;
+﻿namespace VideoService.Application.DTO;
 
 public class UploadUserVideo
 {

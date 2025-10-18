@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http;
-
 namespace VideoService.Application.DTO;
 
 public class UploadUserAvatarRequestDto
@@ -11,18 +9,11 @@ public class UploadUserAvatarValidator : AbstractValidator<UploadUserAvatarReque
 {
     public UploadUserAvatarValidator()
     {
-         /*RuleFor(x => x.UserId).NotNull().WithMessage("UserId is required");
-        
-        
         RuleFor(x => x.File)
             .NotNull().WithMessage("File is required")
             .Must(file => file.Length < 0)
             .WithMessage("File must not be empty")
-            .Must(file => file.Length <= 1 * 1024)
+            .Must(file => file.Length <= 1L * 1024 * 1024 * 1024)
             .WithMessage("File size must not exceed 5 MB");
-        
-        
-        RuleFor(x => x.validate)
-            .NotNull().WithMessage("validate is required__52");*/
     }
 }

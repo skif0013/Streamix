@@ -56,10 +56,8 @@ public class VideoWebService : IVideoService
             
         if (video == null)
             return Result<string>.Failure("Video not found or access denied");
-
-     
-        var deleteResult = await _minioService.DeleteVideo(video.StoragePath);
         
+        var deleteResult = await _minioService.DeleteVideo(video.StoragePath);
         if (deleteResult.IsError)
             return deleteResult;
         
