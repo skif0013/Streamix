@@ -441,3 +441,6 @@ VideoService/.idea/.idea.VideoService/Docker/docker-compose.generated.override.y
 VideoService/.idea/.idea.VideoService/Docker/docker-compose.generated.override.yml
 /EmailService
 /UserService
+/UserService/.idea
+/VideoService/.idea
+/VideoService
